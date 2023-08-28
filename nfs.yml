@@ -4,6 +4,13 @@ services:
   ocis:
     environment:
       # NFS mount
-      OCIS_BASE_DATA_PATH: /ocis
+      OCIS_BASE_DATA_PATH: /var/tmp/ocis
+    entrypoint: /bin/sh
+    command:
+      [
+        '-c',
+        'if [ -z "$NFS_MOUNT_PATH" ]; then echo Env \"NFS_MOUNT_PATH\" is not set. Provide the nfs mounted path.; exit 1; fi; /startup',
+      ]
     volumes:
-      - /nfs-storage:/ocis
+      - ${NFS_MOUNT_PATH:-/tmp/ocis-nfs}:/var/tmp/ocis
+    restart: no
