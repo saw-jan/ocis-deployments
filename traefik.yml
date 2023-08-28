@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  ocis:
+    environment:
+      PROXY_TLS: false # do not use SSL between Traefik and oCIS
+    ports: !reset [] # reset port mapping from base
+
+    labels:
+      traefik.enable: true
+      traefik.http.routers.ocis.service: ocis
+      traefik.http.routers.ocis.entrypoints: websecure
+      traefik.http.routers.ocis.rule: Host(`host.docker.internal`)
+      traefik.http.services.ocis.loadbalancer.server.port: 9200
+
+  traefik:
+    image: traefik:v2.9.1
+    command:
+      - --providers.docker
+      - --providers.docker.exposedbydefault=false
+      - --entrypoints.web.address=:80
+      - --entrypoints.websecure.address=:443
+      - --api.dashboard=true
+    ports:
+      - 9200:443
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro

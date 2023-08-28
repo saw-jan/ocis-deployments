@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+  ocis:
+    environment:
+      # NFS mount
+      OCIS_BASE_DATA_PATH: /ocis
+    volumes:
+      - /nfs-storage:/ocis

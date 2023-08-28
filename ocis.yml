@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  ocis:
+    image: owncloud/ocis:${OCIS_VERSION:-latest}
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    ports:
+      - 9200:9200
+    environment:
+      OCIS_URL: https://host.docker.internal:9200
+      PROXY_ENABLE_BASIC_AUTH: true
+      OCIS_INSECURE: true
+      IDM_ADMIN_PASSWORD: admin
+      WEB_UI_CONFIG: /etc/ocis/config.json
+      # FRONTEND
+      FRONTEND_SEARCH_MIN_LENGTH: 2
+      FRONTEND_OCS_ENABLE_DENIALS: true
+      FRONTEND_FULL_TEXT_SEARCH_ENABLED: true
+      # TIKA
+      SEARCH_EXTRACTOR_TYPE: tika
+      SEARCH_EXTRACTOR_TIKA_TIKA_URL: http://tika:9998
+      SEARCH_EXTRACTOR_CS3SOURCE_INSECURE: true
+    entrypoint: /startup
+    volumes:
+      - ./ocis/web.json:/etc/ocis/config.json
+      - ./ocis/startup.sh:/startup
+    restart: unless-stopped
+
+  tika:
+    image: apache/tika:2.8.0.0
+    restart: unless-stopped

@@ -1,0 +1,19 @@
+dn: uid=admin,ou=users,dc=owncloud,dc=com
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: ownCloudUser
+objectClass: person
+objectClass: posixAccount
+objectClass: top
+uid: admin
+givenName: Admin
+sn: Admin
+cn: admin
+displayName: Admin
+description: An admin for this oCIS instance.
+mail: admin@example.org
+uidNumber: 20004
+gidNumber: 30000
+homeDirectory: /home/admin
+ownCloudUUID: ddc2004c-0977-11eb-9d3f-a793888cd0f8
+userPassword:: e1NTSEF9UWhmaFB3dERydTUydURoWFFObDRMbzVIckI3TkI5Nmo=

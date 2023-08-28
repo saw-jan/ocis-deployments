@@ -1,0 +1,101 @@
+version: '3.8'
+
+services:
+  ocis:
+    environment:
+      GATEWAY_GRPC_ADDR: 0.0.0.0:9142
+      MICRO_REGISTRY: 'mdns'
+    volumes:
+      - ocis-config:/etc/ocis
+      - ./wopi/app-registry.yml:/etc/ocis/app-registry.yaml
+
+  appprovider-collabora:
+    image: owncloud/ocis:${OCIS_VERSION:-latest}
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    command: app-provider server
+    environment:
+      APP_PROVIDER_LOG_LEVEL: error
+      MICRO_REGISTRY: 'mdns'
+      GATEWAY_GRPC_ADDR: 0.0.0.0:9142
+      APP_PROVIDER_GRPC_ADDR: 0.0.0.0:9164
+      REVA_GATEWAY: com.owncloud.api.gateway
+      APP_PROVIDER_SERVICE_NAME: app-provider-collabora
+      APP_PROVIDER_EXTERNAL_ADDR: com.owncloud.api.app-provider-collabora
+      APP_PROVIDER_DRIVER: wopi
+      APP_PROVIDER_WOPI_APP_NAME: Collabora
+      APP_PROVIDER_WOPI_APP_ICON_URI: https://host.docker.internal:9980/favicon.ico
+      APP_PROVIDER_WOPI_APP_URL: https://host.docker.internal:9980
+      APP_PROVIDER_WOPI_INSECURE: true
+      APP_PROVIDER_WOPI_WOPI_SERVER_EXTERNAL_URL: http://host.docker.internal:8880
+      APP_PROVIDER_WOPI_FOLDER_URL_BASE_URL: https://host.docker.internal:9200
+    volumes:
+      - ocis-config:/etc/ocis
+    restart: unless-stopped
+
+  appprovider-onlyoffice:
+    image: owncloud/ocis:${OCIS_VERSION:-latest}
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    command: app-provider server
+    environment:
+      APP_PROVIDER_LOG_LEVEL: debug
+      MICRO_REGISTRY: 'mdns'
+      GATEWAY_GRPC_ADDR: 0.0.0.0:9142
+      APP_PROVIDER_GRPC_ADDR: 0.0.0.0:9164
+      REVA_GATEWAY: com.owncloud.api.gateway
+      APP_PROVIDER_SERVICE_NAME: app-provider-onlyoffice
+      APP_PROVIDER_EXTERNAL_ADDR: com.owncloud.api.app-provider-onlyoffice
+      APP_PROVIDER_DRIVER: wopi
+      APP_PROVIDER_WOPI_APP_NAME: OnlyOffice
+      APP_PROVIDER_WOPI_APP_ICON_URI: https://host.docker.internal:8443/web-apps/apps/documenteditor/main/resources/img/favicon.ico
+      APP_PROVIDER_WOPI_APP_URL: https://host.docker.internal:8443
+      APP_PROVIDER_WOPI_INSECURE: true
+      APP_PROVIDER_WOPI_WOPI_SERVER_EXTERNAL_URL: http://host.docker.internal:8880
+      APP_PROVIDER_WOPI_FOLDER_URL_BASE_URL: https://host.docker.internal:9200
+    volumes:
+      - ocis-config:/etc/ocis
+    restart: unless-stopped
+
+  wopiserver:
+    image: cs3org/wopiserver:v10.0.1
+    ports:
+      - 8880:8880
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    entrypoint: /bin/sh
+    command:
+      ['-c', 'echo "LoremIpsum567" > /etc/wopi/wopisecret ; /app/wopiserver.py']
+    volumes:
+      - ./wopi/wopiserver.conf:/etc/wopi/wopiserver.conf
+
+  collabora:
+    image: collabora/code:22.05.14.3.1
+    ports:
+      - 9980:9980
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    environment:
+      DONT_GEN_SSL_CERT: set
+      extra_params: --o:ssl.enable=true --o:ssl.termination=true --o:welcome.enable=false --o:net.frame_ancestors=https://host.docker.internal:9200
+    cap_add:
+      - MKNOD
+
+  onlyoffice:
+    image: onlyoffice/documentserver:7.3.3
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    ports:
+      - 8443:443
+    entrypoint:
+      - /bin/sh
+      - /override.sh
+    environment:
+      WOPI_ENABLED: true
+      USE_UNAUTHORIZED_STORAGE: false
+    volumes:
+      - ./wopi/onlyoffice.json:/etc/onlyoffice/documentserver/local.dist.json
+      - ./wopi/onlyoffice.sh:/override.sh
+
+volumes:
+  ocis-config:
