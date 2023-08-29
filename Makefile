@@ -2,18 +2,18 @@
 help:
 	@echo "Usage: make <target>"
 	@echo "Available targets:"
-	@echo "  ocis \t\t Starts oCIS"
-	@echo "  ocis-down \t Stops oCIS"
-	@echo "  traefik \t Starts oCIS with traefik"
-	@echo "  traefik-down \t Stops oCIS-traefik"
-	@echo "  ldap \t\t Starts oCIS with ldap"
-	@echo "  ldap-down \t Stops oCIS-ldap"
-	@echo "  wopi \t\t Starts oCIS with wopi"
-	@echo "  wopi-down \t Stops oCIS-wopi"
-	@echo "  nfs \t\t Starts oCIS with nfs storage"
-	@echo "  nfs-down \t Stops oCIS-nfs"
-	@echo "  s3 \t\t Starts oCIS with s3 storage"
-	@echo "  s3-down \t Stops oCIS-s3"
+	@echo "  ocis \t\t\t Starts oCIS"
+	@echo "  ocis-down \t\t Stops oCIS"
+	@echo "  traefik \t\t Starts oCIS with traefik"
+	@echo "  traefik-down \t\t Stops oCIS-traefik"
+	@echo "  ldap \t\t\t Starts oCIS with ldap"
+	@echo "  ldap-down \t\t Stops oCIS-ldap"
+	@echo "  wopi \t\t\t Starts oCIS with wopi"
+	@echo "  wopi-down \t\t Stops oCIS-wopi"
+	@echo "  nfs \t\t\t Starts oCIS with nfs storage. Set mount path using 'NFS_MOUNT_PATH' env"
+	@echo "  nfs-down \t\t Stops oCIS-nfs"
+	@echo "  s3 \t\t\t Starts oCIS with s3 storage"
+	@echo "  s3-down \t\t Stops oCIS-s3"
 	@echo "  keycloak \t\t Starts oCIS with keycloak idp"
 	@echo "  keycloak-down \t Stops oCIS-keycloak"
 
@@ -46,7 +46,6 @@ wopi-down:
 	@docker compose -f ocis.yml -f wopi.yml down -v --remove-orphans
 
 # start oCIS with nfs storage
-# NOTE: mount nfs share to '/nfs-storage'
 .PHONY: nfs
 nfs:
 	@docker compose -f ocis.yml -f nfs.yml up
