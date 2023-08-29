@@ -12,6 +12,8 @@ help:
 	@echo "  wopi-down \t Stops oCIS-wopi"
 	@echo "  nfs \t\t Starts oCIS with nfs storage"
 	@echo "  nfs-down \t Stops oCIS-nfs"
+	@echo "  s3 \t\t Starts oCIS with s3 storage"
+	@echo "  s3-down \t Stops oCIS-s3"
 	@echo "  keycloak \t\t Starts oCIS with keycloak idp"
 	@echo "  keycloak-down \t Stops oCIS-keycloak"
 
@@ -52,6 +54,15 @@ nfs:
 .PHONY: nfs-down
 nfs-down:
 	@docker compose -f ocis.yml -f nfs.yml down -v --remove-orphans
+
+# start oCIS with s3 storage
+.PHONY: s3
+s3:
+	@docker compose -f ocis.yml -f s3.yml up
+
+.PHONY: s3-down
+s3-down:
+	@docker compose -f ocis.yml -f s3.yml down -v --remove-orphans
 
 # start oCIS with traefik
 .PHONY: traefik
