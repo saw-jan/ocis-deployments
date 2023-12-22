@@ -58,7 +58,7 @@ services:
     restart: unless-stopped
 
   wopiserver:
-    image: cs3org/wopiserver:v10.0.1
+    image: cs3org/wopiserver:v10.2.1
     ports:
       - 8880:8880
     extra_hosts:
@@ -70,7 +70,7 @@ services:
       - ./wopi/wopiserver.conf:/etc/wopi/wopiserver.conf
 
   collabora:
-    image: collabora/code:22.05.14.3.1
+    image: collabora/code:23.05.5.4.1
     ports:
       - 9980:9980
     extra_hosts:
@@ -82,7 +82,7 @@ services:
       - MKNOD
 
   onlyoffice:
-    image: onlyoffice/documentserver:7.3.3
+    image: onlyoffice/documentserver:7.5.1
     extra_hosts:
       - host.docker.internal:host-gateway
     ports:
