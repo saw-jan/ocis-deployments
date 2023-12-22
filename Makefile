@@ -17,11 +17,16 @@ help:
 	@echo "  keycloak \t\t Starts oCIS with keycloak idp"
 	@echo "  keycloak-down \t Stops oCIS-keycloak"
 
+COMPOSE_FILES = -f ocis.yml
+
+ifneq ("$(wildcard local.yml)","")
+	COMPOSE_FILES += -f local.yml
+endif
 
 # start oCIS (full text search is enabled)
 .PHONY: ocis
 ocis:
-	@docker compose -f ocis.yml up
+	@docker compose $(COMPOSE_FILES) up
 
 .PHONY: ocis-down
 ocis-down:
@@ -30,53 +35,65 @@ ocis-down:
 # start oCIS with ldap
 .PHONY: ldap
 ldap:
-	@docker compose -f ocis.yml -f ldap.yml up
+	$(eval COMPOSE_FILES += -f ldap.yml)
+	@docker compose $(COMPOSE_FILES) up
 
 .PHONY: ldap-down
 ldap-down:
-	@docker compose -f ocis.yml -f ldap.yml down -v --remove-orphans
+	$(eval COMPOSE_FILES += -f ldap.yml)
+	@docker compose $(COMPOSE_FILES) down -v --remove-orphans
 
 # start oCIS with wopi
 .PHONY: wopi
 wopi:
-	@docker compose -f ocis.yml -f wopi.yml up
+	$(eval COMPOSE_FILES += -f wopi.yml)
+	@docker compose $(COMPOSE_FILES) up
 
 .PHONY: wopi-down
 wopi-down:
-	@docker compose -f ocis.yml -f wopi.yml down -v --remove-orphans
+	$(eval COMPOSE_FILES += -f wopi.yml)
+	@docker compose $(COMPOSE_FILES) down -v --remove-orphans
 
 # start oCIS with nfs storage
 .PHONY: nfs
 nfs:
-	@docker compose -f ocis.yml -f nfs.yml up
+	$(eval COMPOSE_FILES += -f nfs.yml)
+	@docker compose $(COMPOSE_FILES) up
 
 .PHONY: nfs-down
 nfs-down:
-	@docker compose -f ocis.yml -f nfs.yml down -v --remove-orphans
+	$(eval COMPOSE_FILES += -f nfs.yml)
+	@docker compose $(COMPOSE_FILES) down -v --remove-orphans
 
 # start oCIS with s3 storage
 .PHONY: s3
 s3:
-	@docker compose -f ocis.yml -f s3.yml up
+	$(eval COMPOSE_FILES += -f s3.yml)
+	@docker compose $(COMPOSE_FILES) up
 
 .PHONY: s3-down
 s3-down:
-	@docker compose -f ocis.yml -f s3.yml down -v --remove-orphans
+	$(eval COMPOSE_FILES += -f s3.yml)
+	@docker compose $(COMPOSE_FILES) down -v --remove-orphans
 
 # start oCIS with traefik
 .PHONY: traefik
 traefik:
-	@docker compose -f ocis.yml -f traefik.yml up
+	$(eval COMPOSE_FILES += -f traefik.yml)
+	@docker compose $(COMPOSE_FILES) up
 
 .PHONY: traefik-down
 traefik-down:
-	@docker compose -f ocis.yml -f traefik.yml down -v --remove-orphans
+	$(eval COMPOSE_FILES += -f traefik.yml)
+	@docker compose $(COMPOSE_FILES) down -v --remove-orphans
 
 # start oCIS with keycloak
 .PHONY: keycloak
 keycloak:
-	@docker compose -f ocis.yml -f keycloak.yml up
+	$(eval COMPOSE_FILES += -f keycloak.yml)
+	@docker compose $(COMPOSE_FILES) up
 
 .PHONY: keycloak-down
 keycloak-down:
-	@docker compose -f ocis.yml -f keycloak.yml down -v --remove-orphans
+	$(eval COMPOSE_FILES += -f keycloak.yml)
+	@docker compose $(COMPOSE_FILES) down -v --remove-orphans
