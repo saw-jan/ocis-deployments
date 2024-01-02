@@ -23,6 +23,11 @@ ifneq ("$(wildcard local.yml)","")
 	COMPOSE_FILES += -f local.yml
 endif
 
+.PHONY: pull
+pull:
+	$(eval COMPOSE_FILES += -f keycloak.yml -f ldap.yml -f nfs.yml -f s3.yml -f traefik.yml -f wopi.yml)
+	@docker compose $(COMPOSE_FILES) pull
+
 # start oCIS (full text search is enabled)
 .PHONY: ocis
 ocis:
