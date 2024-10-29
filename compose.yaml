@@ -15,14 +15,10 @@ services:
       FRONTEND_SEARCH_MIN_LENGTH: 2
       FRONTEND_OCS_ENABLE_DENIALS: true
       FRONTEND_FULL_TEXT_SEARCH_ENABLED: true
-      # TIKA
-      SEARCH_EXTRACTOR_TYPE: tika
-      SEARCH_EXTRACTOR_TIKA_TIKA_URL: http://tika:9998
-      SEARCH_EXTRACTOR_CS3SOURCE_INSECURE: true
-    entrypoint: /startup
+    entrypoint: /bin/sh
+    command: ['-c', 'ocis init || true; ocis server']
     volumes:
       - ./ocis/web.json:/etc/ocis/config.json
-      - ./ocis/startup.sh:/startup
     restart: unless-stopped
 
   tika:

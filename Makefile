@@ -16,8 +16,10 @@ help:
 	@echo "  s3-down \t\t Stops oCIS-s3"
 	@echo "  keycloak \t\t Starts oCIS with keycloak idp"
 	@echo "  keycloak-down \t Stops oCIS-keycloak"
+	@echo "  tika \t\t Starts oCIS with tika search engine"
+	@echo "  tika-down \t Stops oCIS-tika"
 
-COMPOSE_FILES = -f ocis.yaml
+COMPOSE_FILES = -f compose.yaml
 
 ifneq ("$(wildcard local.yaml)","")
 	COMPOSE_FILES += -f local.yaml
@@ -35,7 +37,7 @@ ocis:
 
 .PHONY: ocis-down
 ocis-down:
-	@docker compose -f ocis.yaml down -v --remove-orphans
+	@docker compose $(COMPOSE_FILES) down -v --remove-orphans
 
 # start oCIS with ldap
 .PHONY: ldap
@@ -101,4 +103,15 @@ keycloak:
 .PHONY: keycloak-down
 keycloak-down:
 	$(eval COMPOSE_FILES += -f keycloak.yaml)
+	@docker compose $(COMPOSE_FILES) down -v --remove-orphans
+
+# start oCIS with tika
+.PHONY: tika
+tika:
+	$(eval COMPOSE_FILES += -f tika.yaml)
+	@docker compose $(COMPOSE_FILES) up
+
+.PHONY: tika-down
+keycloak-down:
+	$(eval COMPOSE_FILES += -f tika.yaml)
 	@docker compose $(COMPOSE_FILES) down -v --remove-orphans

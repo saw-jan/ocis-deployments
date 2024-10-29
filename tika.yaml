@@ -1,0 +1,15 @@
+services:
+  ocis:
+    environment:
+      # TIKA
+      SEARCH_EXTRACTOR_TYPE: tika
+      SEARCH_EXTRACTOR_TIKA_TIKA_URL: http://tika:9998
+      SEARCH_EXTRACTOR_CS3SOURCE_INSECURE: true
+    entrypoint: /startup
+    volumes:
+      - ./ocis/startup.sh:/startup
+    restart: unless-stopped
+
+  tika:
+    image: apache/tika:2.8.0.0
+    restart: unless-stopped
