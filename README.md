@@ -29,13 +29,13 @@ Different combinations of services can be deployed by using `docker compose`. If
 Here is an example to start oCIS with ldap:
 
 ```bash
-docker compose -f ldap.yaml up
+docker compose -f compose.yaml -f ldap.yaml up
 ```
 
 and to stop it:
 
 ```bash
-docker compose -f ldap.yaml down -v
+docker compose -f compose.yaml -f ldap.yaml down -v
 ```
 
 ## Running different oCIS versions
