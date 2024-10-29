@@ -29,19 +29,22 @@ Different combinations of services can be deployed by using `docker compose`. If
 Here is an example to start oCIS with ldap:
 
 ```bash
-docker compose -f ocis.yml -f ldap.yml up
+docker compose -f ldap.yaml up
 ```
 
 and to stop it:
 
 ```bash
-docker compose -f ocis.yml -f ldap.yml down -v
+docker compose -f ldap.yaml down -v
 ```
 
 ## Running different oCIS versions
 
-To run the specific version of oCIS, you can use the `OCIS_VERSION` environment variable to specify the version. For example, to run oCIS 3.1.0:
+You can use the following environment variables to specify the ocis docker image.
+
+- `OCIS_DOCKER_IMAGE`: The docker image to use for oCIS.
+- `OCIS_VERSION_TAG`: The version tag of the docker image to use for oCIS.
 
 ```bash
-OCIS_VERSION=3.1.0 make ldap
+OCIS_DOCKER_IMAGE="owncloud/ocis-rolling" OCIS_VERSION_TAG="6.6.0" make ldap
 ```

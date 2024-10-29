@@ -1,8 +1,6 @@
-version: '3.8'
-
 services:
   ocis:
-    image: owncloud/ocis:${OCIS_VERSION:-latest}
+    image: ${OCIS_DOCKER_IMAGE:-owncloud/ocis}:${OCIS_VERSION_TAG:-latest}
     extra_hosts:
       - host.docker.internal:host-gateway
     ports:
